@@ -11,6 +11,10 @@ app.use(bodyParser.json());
 // Usar o middleware cors para permitir todas as origens
 app.use(cors());
 
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+});
+
 app.listen(PORT, () => {
     console.log(`O Servidor está rodando no http://localhost:${PORT}`);
 });
