@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { use } = require('react');
 
 const SECRET_KEY = 'ESTUDOS_ANGULAR';
 
