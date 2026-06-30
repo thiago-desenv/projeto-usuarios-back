@@ -6,4 +6,8 @@ const generateTokenOnLogin = (username) => {
     return jwt.sign({ username }, SECRET_KEY, { expiresIn: 300 });
 }
 
-module.exports = { generateTokenOnLogin };
+const validateToken = (token) => {
+    return jwt.verify(token, SECRET_KEY);
+}
+
+module.exports = { generateTokenOnLogin, validateToken };
