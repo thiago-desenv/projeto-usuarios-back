@@ -7,16 +7,20 @@ const generateTokenOnLogin = (username) => {
 }
 
 const validateToken = (token) => {
-    if(!token) {
-        return false;
-    }
+    let TOKEN_IS_VALID = false;
 
     try {
-        return jwt.verify(token, SECRET_KEY);
+        if(!token) {
+            throw new Error('Empty token');
+        }
+
+        jwt.verify(token, SECRET_KEY);
+        TOKEN_IS_VALID = true;
     } catch(error) {
-        console.error('Erro na validação do Token:', error.message);
-        return null;
+        TOKEN_IS_VALID = false;
     }
+
+    return TOKEN_IS_VALID;
 }
 
 module.exports = { generateTokenOnLogin, validateToken };

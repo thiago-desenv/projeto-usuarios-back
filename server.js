@@ -29,7 +29,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/validate-token', (req, res) => {
-    const authHeader = req.headers['authorization'].split(' ')[1];
+    const authHeader = req.headers['authorization'];
     console.log('authHeader', authHeader);
     const validToken = validateToken(authHeader);
     console.log('Token válido: ', validToken);
