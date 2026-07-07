@@ -33,7 +33,7 @@ app.post('/validate-token', (req, res) => {
     console.log('authHeader', authHeader);
     const validToken = validateToken(authHeader);
     console.log('Token válido: ', validToken);
-    res.json({ });
+    res.json({});
 });
 
 app.listen(PORT, () => {

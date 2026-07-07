@@ -7,7 +7,16 @@ const generateTokenOnLogin = (username) => {
 }
 
 const validateToken = (token) => {
-    return jwt.verify(token, SECRET_KEY);
+    if(!token) {
+        return false;
+    }
+
+    try {
+        return jwt.verify(token, SECRET_KEY);
+    } catch(error) {
+        console.error('Erro na validação do Token:', error.message);
+        return null;
+    }
 }
 
 module.exports = { generateTokenOnLogin, validateToken };
