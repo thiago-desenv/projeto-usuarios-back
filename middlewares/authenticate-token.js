@@ -1,7 +1,7 @@
 const { validateToken } = require('../utils/jwt-manager');
 
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.heeaders['authorization'];
+    const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if(!token) {

@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { USERS_LIST_BD } = require('./utils/users-list-bd');
-const { generateTokenOnLogin, validateToken } = require('./utils/jwt-manager');
+const { generateTokenOnLogin } = require('./utils/jwt-manager');
+const { authenticateToken } = require('./middlewares/authenticate-token');
 
 const app = express();
 const PORT = 3000;
@@ -28,12 +29,8 @@ app.post('/login', (req, res) => {
     return res.json({ token: userToken });
 });
 
-app.post('/validate-token', (req, res) => {
-    const authHeader = req.headers['authorization'];
-    console.log('authHeader', authHeader);
-    const validToken = validateToken(authHeader);
-    console.log('Token válido: ', validToken);
-    res.json({});
+app.post('/validate-token', authenticateToken, (req, res) => {
+    res.json({ message: 'Token válido' });
 });
 
 app.listen(PORT, () => {
