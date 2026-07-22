@@ -30,7 +30,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/validate-token', authenticateToken, (req, res) => {
-    res.json({ message: 'Token válido' });
+    res.json({ message: 'Token válido', username: res.username });
 });
 
 app.listen(PORT, () => {
