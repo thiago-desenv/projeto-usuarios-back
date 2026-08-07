@@ -33,6 +33,26 @@ app.post('/validate-token', authenticateToken, (req, res) => {
     res.json({ message: 'Token válido', username: res.username });
 });
 
+app.put('/update-user', (req, res) => {
+    const { originalName, name, email, username, password } = req.body;
+    if(!(name && email && username && password)) {
+        return res.status(401).json({ message: 'user data not provided' })
+    }
+
+    const USER_FOUND = 
+        USERS_LIST_BD.find(user => user.username === originalName);
+    if(!USER_FOUND) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    USER_FOUND.email = name;
+    USER_FOUND.email = email;
+    USER_FOUND.username = username;
+    USER_FOUND.password = password;
+
+    return res.json({ USER_FOUND });
+});
+
 app.listen(PORT, () => {
     console.log(`O Servidor está rodando no http://localhost:${PORT}`);
 });
