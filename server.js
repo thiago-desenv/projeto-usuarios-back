@@ -33,24 +33,26 @@ app.post('/validate-token', authenticateToken, (req, res) => {
     res.json({ message: 'Token válido', username: res.username });
 });
 
-app.put('/update-user', (req, res) => {
-    const { originalName, name, email, username, password } = req.body;
+app.put('/update-user', authenticateToken, (req, res) => {
+    const tokenUsername = res.username;
+    const { name, email, username, password } = req.body;
     if(!(name && email && username && password)) {
-        return res.status(401).json({ message: 'user data not provided' })
+        return res.status(400).json({ message: 'User data not provided' })
     }
 
-    const USER_FOUND = 
-        USERS_LIST_BD.find(user => user.username === originalName);
-    if(!USER_FOUND) {
-        return res.status(404).json({ message: 'User not found' });
+    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
+    if(USER_FOUND === -1) {
+        return res.status(403).json({ message: 'User not found' });
     }
 
-    USER_FOUND.email = name;
-    USER_FOUND.email = email;
-    USER_FOUND.username = username;
-    USER_FOUND.password = password;
+    USERS_LIST_BD[USER_FOUND].email = name;
+    USERS_LIST_BD[USER_FOUND].email = email;
+    USERS_LIST_BD[USER_FOUND].username = username;
+    USERS_LIST_BD[USER_FOUND].password = password;
 
-    return res.json({ USER_FOUND });
+    const newToken = generateTokenOnLogin(username);
+
+    return res.json({ message: 'User updated successfuly', token: newToken });
 });
 
 app.listen(PORT, () => {
