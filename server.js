@@ -35,7 +35,9 @@ app.post('/validate-token', authenticateToken, (req, res) => {
 
 app.put('/update-user', authenticateToken, (req, res) => {
     const tokenUsername = res.username;
-    const { name, email, username, password } = req.body;
+    const { name, email, username, password } = req.body.userInfos;
+    console.log('Body', req.body)
+    console.log(name, email, username, password);
     if(!(name && email && username && password)) {
         return res.status(400).json({ message: 'User data not provided' })
     }
