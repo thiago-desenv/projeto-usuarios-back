@@ -36,10 +36,8 @@ app.post('/validate-token', authenticateToken, (req, res) => {
 app.put('/update-user', authenticateToken, (req, res) => {
     const tokenUsername = res.username;
     const { name, email, username, password } = req.body.userInfos;
-    console.log('Body', req.body)
-    console.log(name, email, username, password);
     if(!(name && email && username && password)) {
-        return res.status(400).json({ message: 'User data not provided' })
+        return res.status(400).json({ message: 'User data not provided' });
     }
 
     const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
@@ -55,6 +53,18 @@ app.put('/update-user', authenticateToken, (req, res) => {
     const newToken = generateTokenOnLogin(username);
 
     return res.json({ message: 'User updated successfuly', token: newToken });
+});
+
+app.post('/create/user', authenticateToken, (req, res) => {
+    const { name, email, username, password } = req.body.userInfos;
+    if(!(name && email && username && password)) {
+        return res.status(400).json({ message: 'User data not provided' });
+    }
+
+    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.name === name);
+    if(USER_FOUND ==! -1) {
+        return res.status(409).json({ message: 'User already exists' });
+    }
 });
 
 app.listen(PORT, () => {
