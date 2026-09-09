@@ -55,16 +55,23 @@ app.put('/update-user', authenticateToken, (req, res) => {
     return res.json({ message: 'User updated successfuly', token: newToken });
 });
 
-app.post('/create/user', authenticateToken, (req, res) => {
+app.post('/create-user', authenticateToken, (req, res) => {
+    const tokenUsername = res.username;
     const { name, email, username, password } = req.body.userInfos;
     if(!(name && email && username && password)) {
         return res.status(400).json({ message: 'User data not provided' });
     }
 
     const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.name === name);
-    if(USER_FOUND ==! -1) {
+    if(USER_FOUND !== -1) {
         return res.status(409).json({ message: 'User already exists' });
     }
+
+    USERS_LIST_BD.push({ name, email, username, password });
+
+    const newToken = generateTokenOnLogin(username);
+
+    return res.json({ message: 'User created successfuly', token: newToken });
 });
 
 app.listen(PORT, () => {
