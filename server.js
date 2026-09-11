@@ -57,17 +57,24 @@ app.put('/update-user', authenticateToken, (req, res) => {
 
 app.post('/create-user', authenticateToken, (req, res) => {
     const tokenUsername = res.username;
-    const { name, email, username, password } = req.body.userInfos;
+    const newUser = req.body;
+    console.log('newUser', newUser);
+    const { name, email, username, password } = newUser;
     if(!(name && email && username && password)) {
-        return res.status(400).json({ message: 'User data not provided' });
+        return res.status(404).json({ message: 'User data not provided' });
     }
 
-    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.name === name);
+    const USER_TOKEN_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
+    if(USER_TOKEN_FOUND === -1) {
+        return res.status(409).json({ message: 'User not found' });
+    }
+
+    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === username);
     if(USER_FOUND !== -1) {
         return res.status(409).json({ message: 'User already exists' });
     }
 
-    USERS_LIST_BD.push({ name, email, username, password });
+    USERS_LIST_BD.push(newUser);
 
     const newToken = generateTokenOnLogin(username);
 
