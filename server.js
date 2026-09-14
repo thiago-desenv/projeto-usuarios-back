@@ -57,9 +57,9 @@ app.put('/update-user', authenticateToken, (req, res) => {
 
 app.post('/create-user', authenticateToken, (req, res) => {
     const tokenUsername = res.username;
-    const newUser = req.body;
-    console.log('newUser', newUser);
+    const { newUser } = req.body;
     const { name, email, username, password } = newUser;
+    console.log('name', name);
     if(!(name && email && username && password)) {
         return res.status(404).json({ message: 'User data not provided' });
     }
@@ -76,9 +76,7 @@ app.post('/create-user', authenticateToken, (req, res) => {
 
     USERS_LIST_BD.push(newUser);
 
-    const newToken = generateTokenOnLogin(username);
-
-    return res.json({ message: 'User created successfuly', token: newToken });
+    return res.json({ message: 'User created successfuly' });
 });
 
 app.listen(PORT, () => {
