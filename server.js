@@ -15,18 +15,20 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
+    setTimeout(() => {
+        const { username, password } = req.body;
 
-    const USER_FOUND = 
-        USERS_LIST_BD.find(user => user.username === username && user.password === password);
+        const USER_FOUND = 
+            USERS_LIST_BD.find(user => user.username === username && user.password === password);
 
-    if(!USER_FOUND) {
-        return res.status(401).json({ menssage: 'Invalid credentials' });
-    }
+        if(!USER_FOUND) {
+            return res.status(401).json({ menssage: 'Invalid credentials' });
+        }
 
-    //gerar o token
-    const userToken = generateTokenOnLogin(username);
-    return res.json({ token: userToken });
+        //gerar o token
+        const userToken = generateTokenOnLogin(username);
+        return res.json({ token: userToken });
+    }, 3000);
 });
 
 app.post('/validate-token', authenticateToken, (req, res) => {
@@ -56,27 +58,29 @@ app.put('/update-user', authenticateToken, (req, res) => {
 });
 
 app.post('/create-user', authenticateToken, (req, res) => {
-    const tokenUsername = res.username;
-    const { newUser } = req.body;
-    const { name, email, username, password } = newUser;
-    console.log('name', name);
-    if(!(name && email && username && password)) {
-        return res.status(404).json({ message: 'User data not provided' });
-    }
-
-    const USER_TOKEN_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
-    if(USER_TOKEN_FOUND === -1) {
-        return res.status(409).json({ message: 'User not found' });
-    }
-
-    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === username);
-    if(USER_FOUND !== -1) {
-        return res.status(409).json({ message: 'User already exists' });
-    }
-
-    USERS_LIST_BD.push(newUser);
-
-    return res.json({ message: 'User created successfuly' });
+    setTimeout(() => {
+        const tokenUsername = res.username;
+        const { newUser } = req.body;
+        const { name, email, username, password } = newUser;
+        console.log('name', name);
+        if(!(name && email && username && password)) {
+            return res.status(404).json({ message: 'User data not provided' });
+        }
+    
+        const USER_TOKEN_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
+        if(USER_TOKEN_FOUND === -1) {
+            return res.status(409).json({ message: 'User not found' });
+        }
+    
+        const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === username);
+        if(USER_FOUND !== -1) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+    
+        USERS_LIST_BD.push(newUser);
+    
+        return res.json({ message: 'User created successfuly' });
+        }, 3000);
 });
 
 app.listen(PORT, () => {
